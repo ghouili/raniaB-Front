@@ -1,7 +1,7 @@
 import "./sidebar.css";
 import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { BsShop } from "react-icons/bs";
+import { BsShop, BsBank } from "react-icons/bs";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { GiShop } from "react-icons/gi";
 import { FiUsers } from "react-icons/fi";
@@ -52,6 +52,19 @@ const Sidebar = () => {
         >
           <FiUsers size={26} />
           <span>Admins</span>
+        </Link>
+        
+        {/* Finance::: */}
+        <Link
+          to="/finance"
+          className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
+            location.pathname === "/finance"
+              ? "text-gray-100 bg-customColor"
+              : "text-gray-800"
+          } `}
+        >
+          <BsBank size={26} />
+          <span>Micro-Finances</span>
         </Link>
         
         {/* pdvs::: */}

@@ -7,7 +7,7 @@ export {default as Wallet} from './wallet/wallet';
 export { default as Simulateur } from './simulateur/Simulateur';
 export { default as User } from './user/User';
 export { default as Users } from './user/Users';
-export { default as Finance } from './finance/Finance';
+export { default as Finance } from './finance/Finances';
 export { default as Pointvente} from './pointvente/Pointvente';
 export { default as Offres} from './PDV/Offres';
 export { default as Pdvs} from './PDV/Pdvs';

@@ -45,7 +45,7 @@ const Navbar = () => {
           <div className='flex items-center gap-4 '>
 
             <Link to='/login' className='green-btn border rounded-md text-white px-6 py-2 font-medium '>Connexion</Link>
-            <Link to='/Register' className='border rounded-md bg-blue-900 text-white px-6 py-2 font-medium ' >Devenir Agent</Link>
+            <Link to='/register' className='border rounded-md bg-blue-900 text-white px-6 py-2 font-medium ' >Devenir Agent</Link>
           </div>
         }
 

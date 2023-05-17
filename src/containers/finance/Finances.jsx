@@ -7,15 +7,8 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Avatar,
-  Tooltip,
 } from "@material-tailwind/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 
@@ -23,26 +16,24 @@ import { BsPencilSquare, BsPhone } from "react-icons/bs";
 import { IoTrashOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
 import { BiEdit } from "react-icons/bi";
-import { AiOutlineEye } from "react-icons/ai";
 import InputField from "../../components/inputField/InputField";
 import { path } from "../../utils/Variables";
+import { TfiLocationPin } from "react-icons/tfi";
+import { HiOutlineMail } from "react-icons/hi";
 
-const Packs = () => {
-  const navigate = useNavigate();
+const Finances = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [filterData, setfilterData] = useState([]);
   const [masterData, setmasterData] = useState([]);
   const [formValues, setFormValues] = useState({
-    nom: "",
-    description: "",
-    montant_min: "",
-    montant_max: "",
-    critere_eligibility: "",
-    document_requis: "",
-    delai_traitement: "",
-    picture: null,
+    name: "",
+    email: "",
+    tel: "",
+    adress: "",
+    matricule: "",
+    avatar: "",
   });
   //image related
   const [File, setFile] = useState();
@@ -98,7 +89,7 @@ const Packs = () => {
   const handleOpen = () => setOpen(!open);
 
   const fetchData = async () => {
-    const result = await axios.get(`http://localhost:5000/service`);
+    const result = await axios.get(`http://localhost:5000/user/finance`);
 
     setfilterData(result.data.data);
     setmasterData(result.data.data);
@@ -114,19 +105,17 @@ const Packs = () => {
     setPreviewUrl(null);
     setFile(null);
     setFormValues({
-      nom: "",
-      description: "",
-      montant_min: "",
-      montant_max: "",
-      critere_eligibility: "",
-      document_requis: "",
-      delai_traitement: "",
-      picture: null,
+      name: "",
+      email: "",
+      tel: "",
+      adress: "",
+      matricule: "",
+      avatar: null,
     });
   };
 
-  const Update_Pack = (item) => {
-    // console.log(item);
+  const Update_Finance = (item) => {
+    console.log(item);
     setFormValues(item);
     setOpen(true);
   };
@@ -145,23 +134,21 @@ const Packs = () => {
     console.log(formValues);
     const formData = new FormData();
     if (File) {
-      formData.append("picture", File);
+      formData.append("avatar", File);
     }
-    formData.append("nom", formValues.nom);
-    formData.append("description", formValues.description);
-    formData.append("montant_min", formValues.montant_min);
-    formData.append("montant_max", formValues.montant_max);
-    formData.append("critere_eligibility", formValues.critere_eligibility);
-    formData.append("document_requis", formValues.document_requis);
-    formData.append("delai_traitement", formValues.delai_traitement);
-
+    formData.append("name", formValues.name);
+    formData.append("email", formValues.email);
+    formData.append("tel", formValues.tel);
+    formData.append("adress", formValues.adress);
+    formData.append("matricule", formValues.matricule);
+    formData.append("role", "finance");
     try {
       let url, result;
       if (formValues._id) {
-        url = `${path}service/${formValues._id}`;
+        url = `${path}user/finance/${formValues._id}`;
         result = await axios.put(url, formData);
       } else {
-        url = `${path}service/add`;
+        url = `${path}user/finance/add`;
         result = await axios.post(url, formData);
       }
       console.log(result);
@@ -181,16 +168,16 @@ const Packs = () => {
     }
   };
 
-  const deletePack = async (id) => {
+  const deleteFinance = async (id) => {
     const willDelete = await swal({
       title: "Are you sure?",
-      text: "Are you sure that you want to delete this Pack?",
+      text: "Are you sure that you want to delete this Micr-Finance?",
       icon: "warning",
       dangerMode: true,
     });
 
     if (willDelete) {
-      const result = await axios.delete(`http://localhost:5000/service/${id}`);
+      const result = await axios.delete(`http://localhost:5000/user/${id}`);
 
       if (result.data.success) {
         swal("Success!", result.data.message, "success");
@@ -215,13 +202,16 @@ const Packs = () => {
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
           </Link>
-          <Link to="#">Packs</Link>
+          {/* <Link to="#" className="opacity-60">
+        <span>Users</span>
+    </Link> */}
+          <Link to="#">Mico-Finance</Link>
         </Breadcrumbs>
         <div className="w-fit flex gap-10 items-center">
           <div className="relative flex w-full max-w-[24rem]">
             <Input
               type="search"
-              label="Search pack.."
+              label="Search users.."
               value={search}
               onChange={(e) => searchFilter(e.target.value)}
               className="pr-20 border-customColor"
@@ -240,150 +230,87 @@ const Packs = () => {
           <button
             type="button"
             className="py-1.5 px-3 text-sm font-medium text-customColor focus:outline-none  
-          rounded-lg border-2 border-customColor bg-gray-100 hover:bg-customColor hover:text-gray-100 focus:z-10 
-          focus:ring-4 focus:ring-gray-200 "
+            rounded-lg border-2 border-customColor bg-gray-100 hover:bg-customColor hover:text-gray-100 focus:z-10 
+            focus:ring-4 focus:ring-gray-200 "
             onClick={handleOpen}
           >
-            <span className="flex w-16 justify-center">Add Packs</span>
+            <span className="flex w-32 justify-center">Add Micro-Finance</span>
           </button>
         </div>
       </div>
 
-      <div className="mt-10 w-full grid grid-cols-3 gap-4">
+      <div className="mt-10 w-full grid grid-cols-4 gap-4">
         {filterData
           .slice(0)
           .reverse()
-          .map(
-            ({
-              _id,
-              nom,
-              description,
-              critere_eligibility,
-              document_requis,
-              delai_traitement,
-              montant_min,
-              montant_max,
-              picture,
-            }) => {
-              return (
-                <Card key={_id} className="max-w-[24rem] overflow-hidden">
-                  <CardHeader
-                    floated={false}
-                    shadow={false}
-                    color="transparent"
-                    className="m-0 rounded-none"
-                  >
-                    <img
-                        src={`${path}uploads/images/${picture}`}
-                      alt="ui/ux review check"
-                      className="h-60"
-                    />
-                  </CardHeader>
-                  <CardBody>
-                    <Typography variant="h4" color="blue-gray">
-                      {nom}
-                    </Typography>
-                    <Typography
-                      variant="lead"
-                      color="gray"
-                      className="mt-3 font-normal h-36 overflow-y-auto"
-                    >
-                      {description}
-                    </Typography>
-                    <div className="w-full border my-1" />
-                    <div className="w-full flex items-center justify-between">
-                      <Typography
-                        variant="b"
-                        color="blue-gray"
-                        className="font-medium"
-                      >
-                        {montant_min} Dt
-                      </Typography>
-                      <Typography
-                        variant="b"
-                        color="blue-gray"
-                        className="font-medium"
-                      >
-                        {montant_max} Dt
-                      </Typography>
+          .map(({ _id, email, name, tel, adress, matricule, avatar, role }) => {
+            return (
+              <div
+                key={_id}
+                className="flex flex-col border bg-gray-100 rounded-md shadow py-4 px-2"
+              >
+                <div className="w-full flex justify-center">
+                  <img
+                    src={`${path}uploads/images/${avatar}`}
+                    alt="user Pic"
+                    className="w-20 h-20 rounded-full"
+                  />
+                </div>
+                <div className="flex justify-evenly items-center">
+                  <div className="w-full ">
+                    <div className="w-full flex justify-center gap-4 items-center text-xl font-semibold text-blue-950">
+                      <h2>{name}</h2>
                     </div>
-                    {/* <div className="w-full border my-1" />
-                    <Typography
-                      variant="lead"
-                      color="gray"
-                      className="mt-3 font-normal h-32 overflow-y-auto"
-                    >
-                      {critere_eligibility}
-                    </Typography>
-                    <Typography
-                      variant="lead"
-                      color="gray"
-                      className="mt-3 font-normal h-36 overflow-y-auto"
-                    >
-                      {document_requis}
-                    </Typography>
-                    <Typography
-                      variant="lead"
-                      color="gray"
-                      className="mt-3 font-medium"
-                    >
-                      {delai_traitement}
-                    </Typography> */}
-                  </CardBody>
-                  <CardFooter className="flex items-center justify-between">
-                    <button
-                      type="button"
-                      className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
-                      onClick={() => navigate(`/offres`) }
-                    >
-                      <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
-                        <AiOutlineEye />
-                        Details
-                      </span>
-                    </button>
-                    
-                    <button
-                      type="button"
-                      className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
-                      onClick={() => Update_Pack({
-                        _id,
-                        nom,
-                        description,
-                        critere_eligibility,
-                        document_requis,
-                        delai_traitement,
-                        montant_min,
-                        montant_max,
-                        picture,
-                      })}
-                    >
-                      <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
-                        <BsPencilSquare />
-                        Update
-                      </span>
-                    </button>
+                    <div className="w-full flex  items-center  text-gray-700">
+                      <HiOutlineMail size={20} />
+                      <h2>{email}</h2>
+                    </div>
+                    <div className="w-full flex  items-center  text-gray-700">
+                      <BsPhone size={20} />
+                      <h2>{tel}</h2>
+                    </div>
 
-                    <button
-                      type="button"
-                      className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
-                      onClick={() => deletePack(_id)}
-                    >
-                      <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
-                        <IoTrashOutline />
-                        Delete
-                      </span>
-                    </button>
-                  </CardFooter>
-                </Card>
-              );
-            }
-          )}
+                    <div className="w-full flex  items-center  text-gray-700">
+                      <TfiLocationPin size={20} />
+                      <h2>{adress} </h2>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full border my-2 "></div>
+                <div className="flex justify-between w-full text-gray-700 items-center font-medium text-lg px-5 pt-1">
+                  <button
+                    type="button"
+                    className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
+                    onClick={() =>
+                      Update_Finance({ _id, email, name, avatar, role })
+                    }
+                  >
+                    <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
+                      <BsPencilSquare />
+                      Update
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
+                    onClick={() => deleteFinance(_id)}
+                  >
+                    <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
+                      <IoTrashOutline />
+                      Delete
+                    </span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
       </div>
 
       <Fragment>
         <Dialog open={open} handler={ToggleDialog}>
           <DialogHeader>Add an Admin.</DialogHeader>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} >
             <DialogBody divider>
               {previewUrl ? (
                 <div className=" relative w-40 h-hidden rounded-md shadow-inner mx-auto ">
@@ -455,63 +382,43 @@ const Packs = () => {
                 <InputField
                   type="text"
                   label="Name:"
-                  name="nom"
+                  name="name"
                   placeholder="Name"
-                  value={formValues.nom}
-                  onChange={handleInputChange}
-                />
-                
-                <InputField
-                  type="text"
-                  label="Description:"
-                  name="description"
-                  placeholder="Description.."
-                  value={formValues.description}
+                  value={formValues.name}
                   onChange={handleInputChange}
                 />
                 <InputField
-                  type="number"
-                  label="montant minimum:"
-                  name="montant_min"
-                  placeholder="Minimum.."
-                  value={formValues.montant_min}
+                  type="email"
+                  label="Email:"
+                  name="email"
+                  placeholder="Email"
+                  value={formValues.email}
                   onChange={handleInputChange}
                 />
                 <InputField
-                  type="number"
-                  label="Max Amount:"
-                  name="montant_max"
-                  placeholder="Maxixmum.."
-                  value={formValues.montant_max}
+                  type="tel"
+                  label="Phone number:"
+                  name="tel"
+                  placeholder="Phone number."
+                  value={formValues.tel}
                   onChange={handleInputChange}
                 />
                 <InputField
                   type="text"
-                  label="document_requis:"
-                  name="document_requis"
-                  placeholder="document_requis.."
-                  value={formValues.document_requis}
+                  label="Adress:"
+                  name="adress"
+                  placeholder="Adress.."
+                  value={formValues.adress}
                   onChange={handleInputChange}
                 />
-                
                 <InputField
-                  type="text"
-                  label="critere_eligibility:"
-                  name="critere_eligibility"
-                  placeholder="critere_eligibility.."
-                  value={formValues.critere_eligibility}
+                  type="matricule"
+                  label="Matricule Fescale:"
+                  name="matricule"
+                  placeholder="Matricule Fescale"
+                  value={formValues.matricule}
                   onChange={handleInputChange}
                 />
-                
-                <InputField
-                  type="text"
-                  label="delai_traitement:"
-                  name="delai_traitement"
-                  placeholder="delai_traitement.."
-                  value={formValues.delai_traitement}
-                  onChange={handleInputChange}
-                />
-                
               </div>
             </DialogBody>
             <DialogFooter>
@@ -530,8 +437,10 @@ const Packs = () => {
           </form>
         </Dialog>
       </Fragment>
+
+
     </div>
   );
 };
 
-export default Packs;
+export default Finances;
