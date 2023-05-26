@@ -26,8 +26,11 @@ import { BiEdit } from "react-icons/bi";
 import { AiOutlineEye } from "react-icons/ai";
 import InputField from "../../components/inputField/InputField";
 import { path } from "../../utils/Variables";
+import Cookies from "universal-cookie";
 
 const Packs = () => {
+  const cookies = new Cookies();
+  let user = cookies.get("user");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -236,16 +239,17 @@ const Packs = () => {
               Search
             </Button>
           </div>
-
-          <button
-            type="button"
-            className="py-1.5 px-3 text-sm font-medium text-customColor focus:outline-none  
+          {user && user?.role === "admin" ? (
+            <button
+              type="button"
+              className="py-1.5 w-36 px-3 text-sm font-medium text-customColor focus:outline-none  
           rounded-lg border-2 border-customColor bg-gray-100 hover:bg-customColor hover:text-gray-100 focus:z-10 
           focus:ring-4 focus:ring-gray-200 "
-            onClick={handleOpen}
-          >
-            <span className="flex w-16 justify-center">Add Packs</span>
-          </button>
+              onClick={handleOpen}
+            >
+              <span className="flex w-full justify-center">Add Packs</span>
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -274,7 +278,7 @@ const Packs = () => {
                     className="m-0 rounded-none"
                   >
                     <img
-                        src={`${path}uploads/images/${picture}`}
+                      src={`${path}uploads/images/${picture}`}
                       alt="ui/ux review check"
                       className="h-60"
                     />
@@ -307,72 +311,54 @@ const Packs = () => {
                         {montant_max} Dt
                       </Typography>
                     </div>
-                    {/* <div className="w-full border my-1" />
-                    <Typography
-                      variant="lead"
-                      color="gray"
-                      className="mt-3 font-normal h-32 overflow-y-auto"
-                    >
-                      {critere_eligibility}
-                    </Typography>
-                    <Typography
-                      variant="lead"
-                      color="gray"
-                      className="mt-3 font-normal h-36 overflow-y-auto"
-                    >
-                      {document_requis}
-                    </Typography>
-                    <Typography
-                      variant="lead"
-                      color="gray"
-                      className="mt-3 font-medium"
-                    >
-                      {delai_traitement}
-                    </Typography> */}
                   </CardBody>
                   <CardFooter className="flex items-center justify-between">
                     <button
                       type="button"
                       className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
-                      onClick={() => navigate(`/offres`) }
+                      onClick={() => navigate(`/offres/${_id}`)}
                     >
                       <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                         <AiOutlineEye />
                         Details
                       </span>
                     </button>
-                    
-                    <button
-                      type="button"
-                      className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
-                      onClick={() => Update_Pack({
-                        _id,
-                        nom,
-                        description,
-                        critere_eligibility,
-                        document_requis,
-                        delai_traitement,
-                        montant_min,
-                        montant_max,
-                        picture,
-                      })}
-                    >
-                      <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
-                        <BsPencilSquare />
-                        Update
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
-                      onClick={() => deletePack(_id)}
-                    >
-                      <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
-                        <IoTrashOutline />
-                        Delete
-                      </span>
-                    </button>
+                    {user?.role === "admin" ? (
+                      <button
+                        type="button"
+                        className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
+                        onClick={() =>
+                          Update_Pack({
+                            _id,
+                            nom,
+                            description,
+                            critere_eligibility,
+                            document_requis,
+                            delai_traitement,
+                            montant_min,
+                            montant_max,
+                            picture,
+                          })
+                        }
+                      >
+                        <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
+                          <BsPencilSquare />
+                          Update
+                        </span>
+                      </button>
+                    ) : null}
+                    {user?.role === "admin" ? (
+                      <button
+                        type="button"
+                        className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
+                        onClick={() => deletePack(_id)}
+                      >
+                        <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
+                          <IoTrashOutline />
+                          Delete
+                        </span>
+                      </button>
+                    ) : null}
                   </CardFooter>
                 </Card>
               );
@@ -383,7 +369,11 @@ const Packs = () => {
       <Fragment>
         <Dialog open={open} handler={ToggleDialog}>
           <DialogHeader>Add an Admin.</DialogHeader>
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={handleSubmit}
+            className="overflow-auto"
+            style={{ maxHeight: "85vh" }}
+          >
             <DialogBody divider>
               {previewUrl ? (
                 <div className=" relative w-40 h-hidden rounded-md shadow-inner mx-auto ">
@@ -460,7 +450,7 @@ const Packs = () => {
                   value={formValues.nom}
                   onChange={handleInputChange}
                 />
-                
+
                 <InputField
                   type="text"
                   label="Description:"
@@ -493,7 +483,7 @@ const Packs = () => {
                   value={formValues.document_requis}
                   onChange={handleInputChange}
                 />
-                
+
                 <InputField
                   type="text"
                   label="critere_eligibility:"
@@ -502,7 +492,7 @@ const Packs = () => {
                   value={formValues.critere_eligibility}
                   onChange={handleInputChange}
                 />
-                
+
                 <InputField
                   type="text"
                   label="delai_traitement:"
@@ -511,7 +501,6 @@ const Packs = () => {
                   value={formValues.delai_traitement}
                   onChange={handleInputChange}
                 />
-                
               </div>
             </DialogBody>
             <DialogFooter>

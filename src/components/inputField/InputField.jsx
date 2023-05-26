@@ -5,7 +5,7 @@ const InputField = ({ type, label, name, value, onChange, placeholder }) => {
     <div className="">
       <label
         htmlFor={name}
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        className="block mb-2 text-sm font-medium text-gray-900 "
       >
         {label}
       </label>
@@ -17,7 +17,7 @@ const InputField = ({ type, label, name, value, onChange, placeholder }) => {
         onChange={onChange}
         placeholder={placeholder}
         className="block w-full p-2 text-gray-900 border border-gray-500 rounded-lg bg-gray-50 
-        sm:text-xs focus:ring-blue-500 focus:border-blue-500 "
+        sm:text-xs focus:ring-blue-500 focus:border-blue-500 focus:outline-none "
       />
     </div>
   );

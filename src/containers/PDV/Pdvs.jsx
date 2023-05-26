@@ -235,7 +235,6 @@ const Pdvs = () => {
     formData.append("email", formValues.email);
     formData.append("name", formValues.name);
     formData.append("role", "pdv");
-    formData.append("password", formValues.password);
     formData.append("tel", formValues.tel);
     formData.append("ville", formValues.ville);
     formData.append("adress", formValues.adress);
@@ -312,6 +311,7 @@ const Pdvs = () => {
       }
     }
   };
+  
   return (
     <div className="w-full border mt-4 bg-white p-4 shadow-sm rounded-sm">
       <div className="w-full flex items-center justify-between">

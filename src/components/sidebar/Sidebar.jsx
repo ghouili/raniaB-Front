@@ -1,8 +1,8 @@
 import "./sidebar.css";
-import React, { useContext } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BsShop, BsBank } from "react-icons/bs";
-import { TbLayoutDashboard } from "react-icons/tb";
+import { TbLayoutDashboard, TbMoneybag } from "react-icons/tb";
 import { GiShop } from "react-icons/gi";
 import { FiUsers } from "react-icons/fi";
 import { GiPackedPlanks } from "react-icons/gi";
@@ -10,12 +10,40 @@ import { GiPackedPlanks } from "react-icons/gi";
 import { GeneralContext } from "../../Hooks/context/GeneralContext";
 import Logo from "../../assets/images/logo.png";
 import MiniLogo from "../../assets/images/MiniSebmlogo.png";
+import { GrBusinessService } from "react-icons/gr";
+
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
+  Tabs,
+  TabsHeader,
+  TabsBody,
+  Tab,
+  TabPanel,
+} from "@material-tailwind/react";
+import Cookies from "universal-cookie";
+import { IoDocumentTextOutline } from "react-icons/io5";
 
 const Sidebar = () => {
+  const cookies = new Cookies();
+  let user = cookies.get("user");
   const { sidebarOpen, ToggleSidebar } = useContext(GeneralContext);
   const location = useLocation();
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => setOpenDialog(!openDialog);
   return (
-    <div id="main__sidebar" className="sidebar flex flex-col gap-4">
+    <div
+      id="main__sidebar"
+      className="sidebar h-screen relative flex flex-col gap-4"
+    >
       <div
         className={`w-full bg-white flex justify-center items-center ${
           sidebarOpen ? "px-6 py-4" : "p-3"
@@ -42,56 +70,234 @@ const Sidebar = () => {
         </Link>
 
         {/* user::: */}
-        <Link
-          to="/users"
-          className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
-            location.pathname === "/users"
-              ? "text-gray-100 bg-customColor"
-              : "text-gray-800"
-          } `}
-        >
-          <FiUsers size={26} />
-          <span>Admins</span>
-        </Link>
-        
+        {user?.role === "admin" ? (
+          <Link
+            to="/users"
+            className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
+              location.pathname === "/users"
+                ? "text-gray-100 bg-customColor"
+                : "text-gray-800"
+            } `}
+          >
+            <FiUsers size={26} />
+            <span>Admins</span>
+          </Link>
+        ) : null}
         {/* Finance::: */}
-        <Link
-          to="/finance"
-          className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
-            location.pathname === "/finance"
-              ? "text-gray-100 bg-customColor"
-              : "text-gray-800"
-          } `}
-        >
-          <BsBank size={26} />
-          <span>Micro-Finances</span>
-        </Link>
-        
+        {user?.role === "admin" ? (
+          <Link
+            to="/finance"
+            className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
+              location.pathname === "/finance"
+                ? "text-gray-100 bg-customColor"
+                : "text-gray-800"
+            } `}
+          >
+            <BsBank size={26} />
+            <span>Micro-Finances</span>
+          </Link>
+        ) : null}
+
         {/* pdvs::: */}
+        {user?.role === "admin" ? (
+          <Link
+            to="/pdvs"
+            className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
+              location.pathname === "/pdvs"
+                ? "text-gray-100 bg-customColor"
+                : "text-gray-800"
+            } `}
+          >
+            <BsShop size={26} />
+            <span>PDVs</span>
+          </Link>
+        ) : null}
+
+        {/* pdvsRequests::: */}
+        {user?.role === "admin" ? (
+          <Link
+            to="/requests"
+            className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
+              location.pathname === "/requests"
+                ? "text-gray-100 bg-customColor"
+                : "text-gray-800"
+            } `}
+          >
+            <BsShop size={26} />
+            <span>PDVs Requests</span>
+          </Link>
+        ) : null}
+
+        {/* PACKS::: */}
         <Link
-          to="/pdvs"
+          to="/packs"
           className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
-            location.pathname === "/pdvs"
+            location.pathname === "/packs"
               ? "text-gray-100 bg-customColor"
               : "text-gray-800"
           } `}
         >
-          <BsShop size={26} />
-          <span>PDVs</span>
+          <TbMoneybag size={26} />
+          <span>Les Packs</span>
         </Link>
         
-        {/* pdvsRequests::: */}
+        {/* credit::: */}
         <Link
-          to="/requests"
+          to="/credit"
           className={`rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 ${
-            location.pathname === "/requests"
+            location.pathname === "/credit"
               ? "text-gray-100 bg-customColor"
               : "text-gray-800"
           } `}
         >
-          <BsShop size={26} />
-          <span>PDVs Requests</span>
+          <IoDocumentTextOutline size={26} />
+          <span>Les Credit</span>
         </Link>
+
+        <Fragment>
+          <button
+            className="rounded-md flex flex-row items-center px-3 py-2 gap-2 text-base font-semibold hover:text-gray-800 hover:bg-gray-200 text-gray-800 "
+            onClick={handleOpenDialog}
+          >
+            Simuler Vos Crédit
+          </button>
+          <Dialog open={openDialog} handler={handleOpenDialog}>
+            <DialogHeader>
+              <h1 className="text-5xl font-bold text-blue-900 my-6">
+                Simulateur de crédit{" "}
+              </h1>
+            </DialogHeader>
+            <DialogBody divider>
+              <div className=" flex flex-row gap-20 ">
+                <form className="w-full  " action="">
+                  <div class="grid gap-4 mb-4 sm:grid-cols-2 ">
+                    <div className="flex flex-col gap-3">
+                      <label htmlFor="nomID" className="text-2xl font-medium">
+                        Montant du financement
+                      </label>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <input
+                        type="montant"
+                        name="montant"
+                        id="MontantID"
+                        placeholder="100... Dt"
+                        className="border border-gray-500  bg-white px-2 py-4 "
+                      />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <label
+                        for="steps-range"
+                        className=" text-2xl font-medium block mb-2  text-gray-900 dark:text-black"
+                      >
+                        Durée (mois)
+                      </label>
+                      <input
+                        id="steps-range"
+                        type="range"
+                        min="12"
+                        max="18"
+                        value="2.5"
+                        step="1"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <input
+                        type="durée"
+                        name="durée"
+                        id="DuréelID"
+                        placeholder="12(mois)"
+                        className="border border-gray-500  bg-white px-2 py-4"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <label
+                        for="steps-range"
+                        className=" text-2xl font-medium block mb-2  text-gray-900 dark:text-black"
+                      >
+                        Taux d'intéret (mois)
+                      </label>
+                      <input
+                        id="steps-range"
+                        type="range"
+                        min="12"
+                        max="18"
+                        value="2.5"
+                        step="1"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <input
+                        type="taux"
+                        name="taux"
+                        id="TaixID"
+                        placeholder="Votre Adresse..."
+                        className="border border-gray-500  bg-white px-2 py-4"
+                      />
+                    </div>
+
+                    <label htmlFor="nomID" className="text-2xl font-medium">
+                      Remboursement
+                    </label>
+
+                    <div className="flex flex-col gap-3">
+                      <div class="flex items-center mb-4">
+                        <input
+                          id="default-radio-1"
+                          type="radio"
+                          value=""
+                          name="default-radio"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          for="default-radio-1"
+                          class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        >
+                          Mensuel
+                        </label>
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          checked
+                          id="default-radio-2"
+                          type="radio"
+                          value=""
+                          name="default-radio"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          for="default-radio-2"
+                          class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        >
+                          Trimestriel
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </DialogBody>
+            <DialogFooter>
+              <Button
+                variant="text"
+                color="red"
+                onClick={handleOpenDialog}
+                className="mr-1"
+              >
+                <span>Cancel</span>
+              </Button>
+              <Button
+                variant="gradient"
+                color="green"
+                onClick={handleOpenDialog}
+              >
+                <span>Simuler</span>
+              </Button>
+            </DialogFooter>
+          </Dialog>
+        </Fragment>
       </div>
     </div>
   );

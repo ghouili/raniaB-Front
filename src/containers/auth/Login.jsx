@@ -60,7 +60,7 @@ const Login = () => {
       console.log(result);
       if (result.success) {
         
-       if (result.data.active == true || result.data.role === "admin") {
+       if (result.data.active?.toString() === "true" || result.data.role === "admin") {
         swal("Success!", result.message, "success");
         const jsconValue = JSON.stringify(result.data);
         cookies.set('user', jsconValue);
@@ -73,6 +73,7 @@ const Login = () => {
 
       }
     } catch (error) {
+      console.log(error);
       return swal("Error!", "votre mot de passe ou votre email est inccorect ", "error");
     }
 
